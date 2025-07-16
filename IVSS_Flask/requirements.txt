@@ -12,4 +12,6 @@ gitpython
 ultralytics
 seaborn
 pandas
+gunicorn
+
 
