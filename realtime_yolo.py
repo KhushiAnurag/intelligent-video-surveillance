@@ -1,30 +1,29 @@
 import cv2
 import torch
 
-# Load the YOLOv5s model
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='yolov5s.pt', source='local')  # use the small model
+# ✅ Load YOLOv5s from GitHub (no local files required!)
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
 
-# Open webcam
-cap = cv2.VideoCapture(0)  # 0 = default camera
+# ✅ Load video file
+cap = cv2.VideoCapture("sample_video.mp4")  # Replace with your video filename
+
+if not cap.isOpened():
+    print("❌ Could not open video file.")
+    exit()
 
 while True:
     ret, frame = cap.read()
     if not ret:
+        print("✅ Video finished.")
         break
 
-    # Run detection
     results = model(frame)
+    annotated = results.render()[0]
 
-    # Render results on the frame
-    rendered_frame = results.render()[0]
-
-    # Display it
-    cv2.imshow("Real-Time YOLOv5 Detection", rendered_frame)
-
-    # Break loop with 'q'
+    cv2.imshow("YOLOv5 Detection", annotated)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Clean up
 cap.release()
 cv2.destroyAllWindows()
+

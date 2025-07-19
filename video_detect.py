@@ -22,14 +22,16 @@ while True:
         print("⏹️ End of video or can't read frame.")
         break
 
-    print("🎯 Running detection on frame...")
+    frame = cv2.resize(frame, (640, 480))  # Optional resize
     results = model(frame)
     annotated = results.render()[0]
 
     cv2.imshow("YOLOv5 Detection", annotated)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(25) & 0xFF
+    if key == ord('q'):
         break
+
+
 
 cap.release()
 cv2.destroyAllWindows()
