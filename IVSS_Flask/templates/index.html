@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intelligent Video Surveillance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="bg-gray-800 p-4 shadow-md flex justify-between items-center">
+    <h1 class="text-xl font-bold text-green-400">IVSS - YOLOv5</h1>
+    <button onclick="toggleDarkMode()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">Toggle Dark Mode</button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto p-6 text-center">
+    <h2 class="text-2xl mb-6">Upload a Video File (MP4)</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-4" onsubmit="showSpinner()">
+      <input type="file" name="video" accept=".mp4" required class="bg-gray-800 text-white p-2 rounded">
+      <br>
+      <input type="submit" value="Upload & Detect" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+    </form>
+
+    <!-- Spinner -->
+    <div id="spinner" class="mt-6 hidden">
+      <svg class="animate-spin h-10 w-10 text-green-400 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      <p class="mt-2">Processing video, please wait...</p>
+    </div>
+
+    <!-- Video Output -->
+    {% if download_link %}
+      <div class="mt-10">
+        <p class="mb-2">🎯 Download your processed video:</p>
+        <a href="{{ download_link }}" class="text-green-400 underline" download>Download Output</a>
+
+        <video class="mt-4 mx-auto w-full max-w-lg" controls>
+          <source src="{{ download_link }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 p-4 text-center">
+    © 2025 Intelligent Video Surveillance System | Built with Flask & YOLOv5
+  </footer>
+
+  <script>
+    function showSpinner() {
+      document.getElementById('spinner').classList.remove('hidden');
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>
+
+
