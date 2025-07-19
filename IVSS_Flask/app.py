@@ -6,7 +6,7 @@ import sys
 import numpy as np
 
 # Add local yolov5 folder to system path
-sys.path.append(os.path.join(os.getcwd(), 'yolov5'))
+sys.path.append(os.path.join(os.getcwd(), 'IVSS_Flask', 'yolov5'))
 
 # Import YOLOv5 components
 from models.experimental import attempt_load
@@ -21,10 +21,21 @@ OUTPUT_FOLDER = 'static'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# Load model
-device = select_device('')
-model = attempt_load('yolov5s.pt', map_location=device)
-model.eval()
+# Global model placeholder (lazy loading)
+model = None
+device = None
+
+def load_model():
+    global model, device
+    if model is None:
+        device = select_device('')
+        model_path = os.path.join(os.getcwd(), 'IVSS_Flask', 'yolov5s.pt')
+        model = attempt_load(model_path, map_location=device)
+        model.eval()
+
+@app.route('/health')
+def health():
+    return 'OK', 200
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -36,6 +47,10 @@ def index():
             video.save(input_path)
 
             output_path = os.path.join(OUTPUT_FOLDER, 'output.mp4')
+
+            # Lazy model load
+            load_model()
+
             detect_persons(input_path, output_path)
             download_link = '/static/output.mp4'
 
@@ -87,6 +102,8 @@ def serve_file(filename):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 
 
 
