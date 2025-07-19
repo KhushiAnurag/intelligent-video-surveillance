@@ -1,6 +1,6 @@
 flask
-torch
-torchvision
+torch>=1.8.0
+torchvision>=0.9.0
 opencv-python
 numpy
 pillow
@@ -9,9 +9,10 @@ PyYAML
 tqdm
 requests
 gitpython
-ultralytics
 seaborn
 pandas
 gunicorn
+scipy
+
 
 
